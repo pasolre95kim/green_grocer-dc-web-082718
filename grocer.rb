@@ -55,17 +55,11 @@ end
 
 def checkout(cart, coupons)
 
-  total = 0
-  consolidated = consolidate_cart(cart: cart)
-  coupons_applied = apply_coupons(cart: consolidated, coupons: coupons)
-  clearance_applied = apply_clearance(cart: coupons_applied)
-  clearance_applied.each do |item|
-    total += item[1][:price] * item[1][:count]
-  end
-  if total > 100
-    total = total * 0.9
-  else
-    total
-  end
-  total
+  grand_total = 0
+#  consolidated_cart = consolidate_cart(cart: cart)
+#  cart_with_coupons = apply_coupons(cart: consolidated_cart, coupons: coupons)
+#  discounted_cart = apply_clearance(cart: cart_with_coupons)
+  discounted_cart = apply_clearance(cart: apply_coupons(cart: consolidate_cart(cart: cart), coupons: coupons))
+  discounted_cart.values.each {|pricing| grand_total += pricing[:price]*pricing[:count]}
+  grand_total > 100 ? (grand_total*0.9).round(6) : grand_total
 end
